@@ -13,15 +13,22 @@ import java.rmi.registry.Registry;
 public class Client {
 
     public static void main(String[] argv) throws Exception{
-        BufferedImage sourceImage = ImageIO.read(new File(argv[0]));
-        int w = sourceImage.getWidth(), h = sourceImage.getHeight();
-        int[] ii = new int[w*h];
-        int[] pixelsSet = sourceImage.getRGB(0,0,w,h,ii,0,w);
-        Registry registry = LocateRegistry.getRegistry("localhost", 2099);
-        ImageProcessingService service = (ImageProcessingService) registry.lookup("Lab2");
-        int[] response = service.smooth(pixelsSet,w,h);
-        BufferedImage resultImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        resultImage.setRGB(0,0,w,h,response,0,w);
-        ImageIO.write(resultImage, "JPG", new File(argv[1]));
+        try {
+            BufferedImage sourceImage = ImageIO.read(new File(argv[0]));
+            int width = sourceImage.getWidth(), height = sourceImage.getHeight();
+            int[] size = new int[width * height];
+            int[] pixelsSet = sourceImage.getRGB(0, 0, width, height, size, 0, width);
+            Registry registry = LocateRegistry.getRegistry("localhost", 2099);
+            ImageProcessingService service = (ImageProcessingService) registry.lookup("Lab2");
+            int[] response = service.smooth(pixelsSet, width, height);
+            BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            resultImage.setRGB(0, 0, width, height, response, 0, width);
+            ImageIO.write(resultImage, "png", new File(argv[1]));
+            System.out.println("Mission completed!");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 }

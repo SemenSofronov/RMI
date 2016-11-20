@@ -12,15 +12,15 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class Server implements ImageProcessingService {
     @Override
-    public int[] smooth(int[] pixelsSet, int w, int h) throws RemoteException {
+    public int[] smooth(int[] pixelsSet, int width, int height) throws RemoteException {
 
         double[][] mask = new double[][]{{1./16.,1./8.,1./16.},
                                          {1./8.,1./4.,1./8.},
                                          {1./16.,1./8.,1./16.}
         };
 
-        BufferedImage sourceImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        sourceImage.setRGB(0,0,w,h,pixelsSet,0,sourceImage.getWidth());
+        BufferedImage sourceImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        sourceImage.setRGB(0,0,width,height,pixelsSet,0,width);
         BufferedImage resultImage = sourceImage;
         int[] pixNew = new int[3], pixOld = new int[3];
         int[] ii = new int[]{0,0,0};
@@ -43,7 +43,7 @@ public class Server implements ImageProcessingService {
             }
         }
 
-        return resultImage.getRGB(0,0,w,h,new int[w*h],0,w);
+        return resultImage.getRGB(0,0,width,height,new int[width*height],0,width);
     }
 
     public static void main(String[] argv) throws Exception {
